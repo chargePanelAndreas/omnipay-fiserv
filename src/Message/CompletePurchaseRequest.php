@@ -3,7 +3,7 @@
  * First Data Connect Complete Purchase Request
  */
 
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
 

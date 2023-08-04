@@ -3,7 +3,7 @@
  * First Data Connect Gateway
  */
 
-namespace Omnipay\FirstData;
+namespace Omnipay\FiservArg;
 
 use Omnipay\Common\AbstractGateway;
 
@@ -155,21 +155,21 @@ class ConnectGateway extends AbstractGateway
      * Create a purchase request.
      *
      * @param array $parameters
-     * @return \Omnipay\FirstData\Message\PurchaseRequest
+     * @return \Omnipay\FiservArg\Message\PurchaseRequest
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\FirstData\Message\PurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\FiservArg\Message\PurchaseRequest', $parameters);
     }
 
     /**
      * Create a complete purchase request.
      *
      * @param array $parameters
-     * @return \Omnipay\FirstData\Message\CompletePurchaseRequest
+     * @return \Omnipay\FiservArg\Message\CompletePurchaseRequest
      */
     public function completePurchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\FirstData\Message\CompletePurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\FiservArg\Message\CompletePurchaseRequest', $parameters);
     }
 }

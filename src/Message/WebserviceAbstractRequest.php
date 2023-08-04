@@ -3,7 +3,7 @@
  * First Data Webservice Abstract Request
  */
 
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Common\Message\AbstractRequest;
 

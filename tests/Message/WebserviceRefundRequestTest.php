@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Tests\TestCase;
 

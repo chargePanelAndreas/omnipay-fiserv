@@ -3,7 +3,7 @@
  * First Data Webservice Response
  */
 
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 

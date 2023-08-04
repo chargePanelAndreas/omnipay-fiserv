@@ -2,7 +2,7 @@
 /**
  * First Data Webservice Purchase Request
  */
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 /**
  * First Data Webservice Purchase Request

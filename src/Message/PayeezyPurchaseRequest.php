@@ -2,7 +2,7 @@
 /**
  * First Data Payeezy Purchase Request
  */
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 /**
  * First Data Payeezy Purchase Request

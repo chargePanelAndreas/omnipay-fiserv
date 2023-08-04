@@ -1,9 +1,9 @@
 <?php
 
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Tests\TestCase;
-use Omnipay\FirstData\Message\PayeezyPurchaseRequest;
+use Omnipay\FiservArg\Message\PayeezyPurchaseRequest;
 
 class PayeezyPurchaseRequestTest extends TestCase
 {

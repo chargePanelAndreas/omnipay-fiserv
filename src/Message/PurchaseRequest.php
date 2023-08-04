@@ -3,7 +3,7 @@
  * First Data Connect Purchase Request
  */
 
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Message\AbstractRequest;

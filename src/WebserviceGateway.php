@@ -3,7 +3,7 @@
  * First Data Webservice Gateway
  */
 
-namespace Omnipay\FirstData;
+namespace Omnipay\FiservArg;
 
 use Omnipay\Common\AbstractGateway;
 
@@ -360,54 +360,54 @@ class WebserviceGateway extends AbstractGateway
      * Create a purchase request.
      *
      * @param array $parameters
-     * @return \Omnipay\FirstData\Message\WebservicePurchaseRequest
+     * @return \Omnipay\FiservArg\Message\WebservicePurchaseRequest
      */
     public function purchase(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\FirstData\Message\WebservicePurchaseRequest', $parameters);
+        return $this->createRequest('\Omnipay\FiservArg\Message\WebservicePurchaseRequest', $parameters);
     }
 
     /**
      * Create an authorize request.
      *
      * @param array $parameters
-     * @return \Omnipay\FirstData\Message\WebserviceAuthorizeRequest
+     * @return \Omnipay\FiservArg\Message\WebserviceAuthorizeRequest
      */
     public function authorize(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\FirstData\Message\WebserviceAuthorizeRequest', $parameters);
+        return $this->createRequest('\Omnipay\FiservArg\Message\WebserviceAuthorizeRequest', $parameters);
     }
 
     /**
      * Create a capture request.
      *
      * @param array $parameters
-     * @return \Omnipay\FirstData\Message\WebserviceCaptureRequest
+     * @return \Omnipay\FiservArg\Message\WebserviceCaptureRequest
      */
     public function capture(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\FirstData\Message\WebserviceCaptureRequest', $parameters);
+        return $this->createRequest('\Omnipay\FiservArg\Message\WebserviceCaptureRequest', $parameters);
     }
 
     /**
      * Create a void request.
      *
      * @param array $parameters
-     * @return \Omnipay\FirstData\Message\WebserviceVoidRequest
+     * @return \Omnipay\FiservArg\Message\WebserviceVoidRequest
      */
     public function void(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\FirstData\Message\WebserviceVoidRequest', $parameters);
+        return $this->createRequest('\Omnipay\FiservArg\Message\WebserviceVoidRequest', $parameters);
     }
 
     /**
      * Create a refund request.
      *
      * @param array $parameters
-     * @return \Omnipay\FirstData\Message\WebserviceRefundRequest
+     * @return \Omnipay\FiservArg\Message\WebserviceRefundRequest
      */
     public function refund(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\FirstData\Message\WebserviceRefundRequest', $parameters);
+        return $this->createRequest('\Omnipay\FiservArg\Message\WebserviceRefundRequest', $parameters);
     }
 }

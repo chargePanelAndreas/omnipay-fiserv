@@ -3,7 +3,7 @@
  * First Data Global Gateway
  */
 
-namespace Omnipay\FirstData;
+namespace Omnipay\FiservArg;
 
 /**
  * First Data Global Gateway

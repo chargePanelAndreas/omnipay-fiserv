@@ -3,7 +3,7 @@
  * First Data Payeezy Authorize Request
  */
 
-namespace Omnipay\FirstData\Message;
+namespace Omnipay\FiservArg\Message;
 
 /**
  * First Data Payeezy Authorize Request

@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\FirstData;
+namespace Omnipay\FiservArg;
 
 use Omnipay\Tests\GatewayTestCase;
 
