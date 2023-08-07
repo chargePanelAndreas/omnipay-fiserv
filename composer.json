@@ -1,7 +1,7 @@
 {
-    "name": "omnipay/firstdata",
+    "name": "omnipay/fiserv-arg",
     "type": "library",
-    "description": "First Data driver for the Omnipay payment processing library",
+    "description": "Fiserv Argentina driver for the Omnipay payment processing library",
     "keywords": [
         "first data",
         "firstdata",
@@ -9,7 +9,8 @@
         "merchant",
         "omnipay",
         "pay",
-        "payment"
+        "payment",
+        "fiserv"
     ],
     "homepage": "https://github.com/thephpleague/omnipay-firstdata",
     "license": "MIT",
@@ -21,6 +22,10 @@
         {
             "name": "Omnipay Contributors",
             "homepage": "https://github.com/thephpleague/omnipay-firstdata/contributors"
+        },
+        {
+            "name": "Gonzalo Torres",
+            "email": "torresgonzalom@gmail.com"
         }
     ],
     "autoload": {
@@ -28,7 +33,7 @@
     },
     "require": {
         "php": "^5.6|^7",
-        "omnipay/common": "~3.0",
+        "omnipay/common": "^3.1",
         "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {
@@ -39,5 +44,10 @@
             "dev-master": "3.0.x-dev"
         }
     },
-    "prefer-stable": true
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
 }

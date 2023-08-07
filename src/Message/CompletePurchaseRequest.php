@@ -6,50 +6,45 @@
 namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Common\Exception\InvalidResponseException;
+use Omnipay\Common\Message\ResponseInterface;
 
 /**
  * First Data Connect Complete Purchase Request
  */
 class CompletePurchaseRequest extends PurchaseRequest
 {
-    public function getData()
+    public function getData(): array
     {
-        $theirHash = (string) $this->httpRequest->request->get('response_hash');
-        $dateTime  = (string) $this->httpRequest->request->get('txndatetime');
-        $amount    = (string) $this->httpRequest->request->get('chargetotal');
-        $code      = (string) $this->httpRequest->request->get('approval_code');
-        $ourHash   = $this->createResponseHash($amount, $dateTime, $code);
-        if ($theirHash !== $ourHash) {
-            throw new InvalidResponseException("Callback hash does not match expected value");
-        }
+        $this->validateResponseHash();
 
         return $this->httpRequest->request->all();
     }
 
-    public function sendData($data)
+    private function validateResponseHash(): void
+    {
+        $theirHash = (string) $this->httpRequest->request->get('response_hash');
+        $ourHash   = $this->createResponseHash($this->httpRequest->request->all());
+
+        if ($theirHash !== $ourHash) {
+            throw new InvalidResponseException("Callback hash does not match expected value $ourHash");
+        }
+    }
+
+    public function sendData($data): ResponseInterface
     {
         return $this->response = new CompletePurchaseResponse($this, $data);
     }
 
-    /**
-     * Generate a hash string that matches the format of the one returned by the payment gateway
-     *
-     * @param  string $amount
-     * @param  string $dateTime
-     * @param  string $code
-     * @return string
-     */
-    public function createResponseHash($amount, $dateTime, $code)
+    public function createResponseHash(array $data): string
     {
-        $this->validate('storeId', 'sharedSecret', 'currency');
+        $this->validate('storeId', 'sharedSecret');
 
-        $storeId      = $this->getStoreId();
-        $sharedSecret = $this->getSharedSecret();
-        $currency     = $this->getCurrencyNumeric();
+        $data['storename'] = $this->getStoreId();
 
-        $stringToHash = $sharedSecret . $code . $amount . $currency . $dateTime . $storeId;
-        $ascii        = bin2hex($stringToHash);
+        $order = [
+            'approval_code', 'chargetotal', 'currency', 'txndatetime', 'storename',
+        ];
 
-        return sha1($ascii);
+        return $this->createHash($data, $order);
     }
 }

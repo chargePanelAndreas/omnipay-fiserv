@@ -6,6 +6,7 @@
 namespace Omnipay\FiservArg;
 
 use Omnipay\Common\AbstractGateway;
+use Omnipay\Common\Message\RequestInterface;
 
 /**
  * First Data Connect Gateway
@@ -85,12 +86,12 @@ use Omnipay\Common\AbstractGateway;
  */
 class ConnectGateway extends AbstractGateway
 {
-    public function getName()
+    public function getName(): string
     {
-        return 'First Data Connect';
+        return 'Fiserv Argentina Connect';
     }
 
-    public function getDefaultParameters()
+    public function getDefaultParameters(): array
     {
         return array(
             'storeId'      => '',
@@ -107,7 +108,7 @@ class ConnectGateway extends AbstractGateway
      *
      * @return ConnectGateway provides a fluent interface
      */
-    public function setStoreId($value)
+    public function setStoreId($value): self
     {
         return $this->setParameter('storeId', $value);
     }
@@ -120,9 +121,9 @@ class ConnectGateway extends AbstractGateway
      *
      * @return string
      */
-    public function getStoreId()
+    public function getStoreId(): string
     {
-        return $this->getParameter('storeId');
+        return (string) $this->getParameter('storeId');
     }
 
     /**
@@ -133,7 +134,7 @@ class ConnectGateway extends AbstractGateway
      *
      * @return ConnectGateway provides a fluent interface
      */
-    public function setSharedSecret($value)
+    public function setSharedSecret($value): self
     {
         return $this->setParameter('sharedSecret', $value);
     }
@@ -146,9 +147,9 @@ class ConnectGateway extends AbstractGateway
      *
      * @return string
      */
-    public function getSharedSecret()
+    public function getSharedSecret(): string
     {
-        return $this->getParameter('sharedSecret');
+        return (string) $this->getParameter('sharedSecret');
     }
 
     /**
@@ -157,7 +158,7 @@ class ConnectGateway extends AbstractGateway
      * @param array $parameters
      * @return \Omnipay\FiservArg\Message\PurchaseRequest
      */
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = array()): RequestInterface
     {
         return $this->createRequest('\Omnipay\FiservArg\Message\PurchaseRequest', $parameters);
     }
@@ -168,7 +169,7 @@ class ConnectGateway extends AbstractGateway
      * @param array $parameters
      * @return \Omnipay\FiservArg\Message\CompletePurchaseRequest
      */
-    public function completePurchase(array $parameters = array())
+    public function completePurchase(array $parameters = array()): RequestInterface
     {
         return $this->createRequest('\Omnipay\FiservArg\Message\CompletePurchaseRequest', $parameters);
     }

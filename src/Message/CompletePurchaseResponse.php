@@ -12,23 +12,23 @@ use Omnipay\Common\Message\AbstractResponse;
  */
 class CompletePurchaseResponse extends AbstractResponse
 {
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
-        return isset($this->data['status']) && $this->data['status'] == 'APPROVED';
+        return isset($this->data['status']) && $this->data['status'] == 'APROBADO';
     }
 
-    public function getTransactionId()
+    public function getTransactionId(): ?string
     {
-        return isset($this->data['oid']) ? $this->data['oid'] : null;
+        return $this->data['oid'] ?? null;
     }
 
-    public function getTransactionReference()
+    public function getTransactionReference(): ?string
     {
-        return isset($this->data['refnumber']) ? $this->data['refnumber'] : null;
+        return $this->data['refnumber'] ?? null;
     }
 
-    public function getMessage()
+    public function getMessage(): ?string
     {
-        return isset($this->data['status']) ? $this->data['status'] : null;
+        return $this->data['status'] ?? null;
     }
 }

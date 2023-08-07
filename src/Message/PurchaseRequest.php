@@ -1,22 +1,23 @@
 <?php
 /**
- * First Data Connect Purchase Request
+ * Fiserv Argentina Connect Purchase Request
  */
 
 namespace Omnipay\FiservArg\Message;
 
 use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Message\AbstractRequest;
+use Omnipay\Common\Message\ResponseInterface;
 
 /**
- * First Data Connect Purchase Request
+ * Fiserv Argentina Connect Purchase Request
  */
 class PurchaseRequest extends AbstractRequest
 {
-    protected $liveEndpoint = 'https://www.ipg-online.com/connect/gateway/processing';
-    protected $testEndpoint = 'https://test.ipg-online.com/connect/gateway/processing';
+    protected string $liveEndpoint = 'https://www.ipg-online.com/connect/gateway/processing';
+    protected string $testEndpoint = 'https://test.ipg-online.com/connect/gateway/processing';
 
-    protected function getDateTime()
+    protected function getDateTime(): string
     {
         return date("Y:m:d-H:i:s");
     }
@@ -29,7 +30,7 @@ class PurchaseRequest extends AbstractRequest
      *
      * @return PurchaseRequest provides a fluent interface
      */
-    public function setStoreId($value)
+    public function setStoreId($value): self
     {
         return $this->setParameter('storeId', $value);
     }
@@ -42,9 +43,9 @@ class PurchaseRequest extends AbstractRequest
      *
      * @return string
      */
-    public function getStoreId()
+    public function getStoreId(): string
     {
-        return $this->getParameter('storeId');
+        return (string) $this->getParameter('storeId');
     }
 
     /**
@@ -55,126 +56,118 @@ class PurchaseRequest extends AbstractRequest
      *
      * @return PurchaseRequest provides a fluent interface
      */
-    public function setSharedSecret($value)
+    public function setSharedSecret($value): self
     {
         return $this->setParameter('sharedSecret', $value);
     }
 
-    /**
-     * Get Shared Secret
-     *
-     * Calls to the Connect Gateway API are secured with a store ID and
-     * shared secret.
-     *
-     * @return string
-     */
-    public function getSharedSecret()
+    public function getSharedSecret(): string
     {
-        return $this->getParameter('sharedSecret');
+        return (string) $this->getParameter('sharedSecret');
     }
 
-    public function setHostedDataId($value)
+    public function setHostedDataId($value): self
     {
         return $this->setParameter('hostedDataId', $value);
     }
 
-    public function getHostedDataId()
+    public function getHostedDataId(): string
     {
-        return $this->getParameter('hostedDataId');
+        return (string) $this->getParameter('hostedDataId');
     }
 
-    public function setCustomerId($value)
+    public function setCustomerId($value): self
     {
         return $this->setParameter('customerId', $value);
     }
 
-    public function getCustomerId()
+    public function getCustomerId(): string
     {
-        return $this->getParameter('customerId');
+        return (string) $this->getParameter('customerId');
     }
 
-    public function getData()
+    public function getData(): array
     {
-        $this->validate('amount', 'card');
+        $this->validate('amount');
+        $cardDataExists = !empty($this->getCard());
 
-        $data                = array();
-        $data['storename']   = $this->getStoreId();
-        $data['txntype']     = 'sale';
-        $data['timezone']    = 'GMT';
-        $data['chargetotal'] = $this->getAmount();
-        $data['txndatetime'] = $this->getDateTime();
-        $data['hash']        = $this->createHash($data['txndatetime'], $data['chargetotal']);
-        $data['currency']    = $this->getCurrencyNumeric();
-        $data['mode']        = 'payonly';
-        $data['full_bypass'] = 'true';
-        $data['oid']         = $this->getParameter('transactionId');
+        $data = [
+            'txntype' => 'sale',
+            'timezone' => date_default_timezone_get(),
+            'txndatetime' => $this->getDateTime(),
+            'hash_algorithm' => 'HMACSHA256',
+            'storename' => $this->getStoreId(),
+            'mode' => 'payonly',
+            'paymentMethod' => $this->getParameter('paymentMethod'),
+            'chargetotal' => $this->getAmount(),
+            'currency' => $this->getCurrencyNumeric(),
+            'responseSuccessURL' => $this->getParameter('returnUrl'),
+            'responseFailURL' => $this->getParameter('returnUrl'),
+            'oid' => $this->getParameter('transactionId'),
+            'taxRefundIndicator' => $this->getParameter('taxRefundIndicator'),
+            'transactionNotificationURL' => $this->getParameter('transactionNotificationURL'),
+            'customerid' => $this->getCustomerId(),
+            'hosteddataid' => $this->getHostedDataId(),
+            'full_bypass' => $cardDataExists,
+        ];
 
+        if ($cardDataExists) {
+            $this->validateCardData();
+
+            $data['cardnumber'] = $this->getCard()->getNumber();
+            $data['cvm']        = $this->getCard()->getCvv();
+            $data['expmonth']   = $this->getCard()->getExpiryDate('m');
+            $data['expyear']    = $this->getCard()->getExpiryDate('y');
+        }
+
+        $data['hashExtended'] = $this->createExtendedHash($data);
+
+        return $data;
+    }
+
+    private function validateCardData()
+    {
         // If no hosted data, or a number is passed, validate the whole card
-        if (is_null($this->getHostedDataId()) || ! is_null($this->getCard()->getNumber())) {
+        if (empty($this->getHostedDataId()) || ! is_null($this->getCard()->getNumber())) {
             $this->getCard()->validate();
         } elseif (is_null($this->getCard()->getCvv())) {
             // Else we only require the cvv when using hosted data
             throw new InvalidCreditCardException("The CVV parameter is required when using hosteddataid");
         }
-
-        $data['cardnumber'] = $this->getCard()->getNumber();
-        $data['cvm']        = $this->getCard()->getCvv();
-        $data['expmonth']   = $this->getCard()->getExpiryDate('m');
-        $data['expyear']    = $this->getCard()->getExpiryDate('y');
-
-        $data['bname']    = $this->getCard()->getBillingName();
-        $data['baddr1']   = $this->getCard()->getBillingAddress1();
-        $data['baddr2']   = $this->getCard()->getBillingAddress2();
-        $data['bcity']    = $this->getCard()->getBillingCity();
-        $data['bstate']   = $this->getCard()->getBillingState();
-        $data['bcountry'] = $this->getCard()->getBillingCountry();
-        $data['bzip']     = $this->getCard()->getBillingPostcode();
-
-        $data['sname']    = $this->getCard()->getShippingName();
-        $data['saddr1']   = $this->getCard()->getShippingAddress1();
-        $data['saddr2']   = $this->getCard()->getShippingAddress2();
-        $data['scity']    = $this->getCard()->getShippingCity();
-        $data['sstate']   = $this->getCard()->getShippingState();
-        $data['scountry'] = $this->getCard()->getShippingCountry();
-        $data['szip']     = $this->getCard()->getShippingPostcode();
-
-        $data['phone'] = $this->getCard()->getPhone();
-        $data['email'] = $this->getCard()->getEmail();
-
-        $data['responseSuccessURL'] = $this->getParameter('returnUrl');
-        $data['responseFailURL']    = $this->getParameter('returnUrl');
-
-        $data['customerid'] = $this->getCustomerId();
-
-        $data['hosteddataid'] = $this->getHostedDataId();
-
-        return $data;
     }
 
-    /**
-     * Returns a SHA-1 hash of the transaction data.
-     *
-     * @param $dateTime
-     * @param $amount
-     * @return string
-     */
-    public function createHash($dateTime, $amount)
+    public function createExtendedHash($data): string
     {
-        $storeId      = $this->getStoreId();
-        $sharedSecret = $this->getSharedSecret();
-        $currency     = $this->getCurrencyNumeric();
-        $stringToHash = $storeId . $dateTime . $amount . $currency . $sharedSecret;
-        $ascii        = bin2hex($stringToHash);
+        $order = array_keys($data);
+        sort($order);
 
-        return sha1($ascii);
+        return $this->createHash($data, $order);
     }
 
-    public function sendData($data)
+    protected function createHash(array $data, array $order): string
+    {
+        $valuesToHash = array_map(function ($paramName) use ($data) {
+            return $data[$paramName];
+        }, $order);
+
+        $stringToHash = implode('|', array_filter($valuesToHash));
+
+        $hash = hash_hmac('sha256', $stringToHash, $this->getSharedSecret(), true);
+
+        return base64_encode($hash);
+    }
+
+    public function getCurrencyNumeric(): ?string
+    {
+        return str_pad(parent::getCurrencyNumeric(), 3, '0', STR_PAD_LEFT);
+    }
+
+    public function sendData($data): ResponseInterface
     {
         return $this->response = new PurchaseResponse($this, $data);
     }
 
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
     }
