@@ -1,6 +1,6 @@
-# Omnipay: First Data
+# Omnipay: Fiserv Argentina
 
-**First Data driver for the Omnipay PHP payment processing library**
+**Fiserv Argentina driver for the Omnipay PHP payment processing library**
 
 [![Build Status](https://travis-ci.org/thephpleague/omnipay-firstdata.png?branch=master)](https://travis-ci.org/thephpleague/omnipay-firstdata)
 [![Latest Stable Version](https://poser.pugx.org/omnipay/firstdata/version.png)](https://packagist.org/packages/omnipay/firstdata)
