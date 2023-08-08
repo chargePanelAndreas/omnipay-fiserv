@@ -17,7 +17,7 @@ to your `composer.json` file:
 ```json
 {
     "require": {
-        "omnipay/firstdata": "~3.0"
+        "gonmt/fiserv-arg": "*"
     }
 }
 ```
@@ -31,9 +31,7 @@ And run composer to update your dependencies:
 
 The following gateways are provided by this package:
 
-* FirstData_Connect
-* FirstData_Webservice
-* FirstData_Payeezy
+* FiservArg_Connect
 
 For general usage instructions, please see the main [Omnipay](https://github.com/thephpleague/omnipay)
 repository.

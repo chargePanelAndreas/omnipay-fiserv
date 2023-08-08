@@ -1,5 +1,5 @@
 {
-    "name": "omnipay/fiserv-arg",
+    "name": "gonmt/fiserv-arg",
     "type": "library",
     "description": "Fiserv Argentina driver for the Omnipay payment processing library",
     "keywords": [
@@ -12,7 +12,7 @@
         "payment",
         "fiserv"
     ],
-    "homepage": "https://github.com/thephpleague/omnipay-firstdata",
+    "homepage": "https://github.com/gonmt/omnipay-fiserv-arg.git",
     "license": "MIT",
     "authors": [
         {
