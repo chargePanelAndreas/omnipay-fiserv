@@ -16,13 +16,13 @@ abstract class WebserviceAbstractRequest extends AbstractRequest
     protected $liveWsdl = "https://ws.firstdataglobalgateway.com/fdggwsapi/services/order.wsdl";
 
     /** @var string Test WSDL URL */
-    protected $testWsdl = "https://ws.merchanttest.firstdataglobalgateway.com/fdggwsapi/services/order.wsdl";
+    protected $testWsdl = "https://test.ipg-online.com/ipgapi/services/order.wsdl";
 
     /** @var string Live endpoint for direct posting XML data */
     protected $liveEndpoint = 'https://ws.firstdataglobalgateway.com:443/fdggwsapi/services';
 
     /** @var string Test endpoint for direct posting XML data */
-    protected $testEndpoint = 'https://ws.merchanttest.firstdataglobalgateway.com:443/fdggwsapi/services';
+    protected $testEndpoint = 'https://test.ipg-online.com/ipgapi/services';
 
     /** @var  resource cURL handle */
     protected $curl;
