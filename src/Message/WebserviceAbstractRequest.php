@@ -211,6 +211,21 @@ abstract class WebserviceAbstractRequest extends AbstractRequest
         return $this->setParameter('password', $value);
     }
 
+    public function getStoreId()
+    {
+        return $this->getParameter('storeId');
+    }
+
+    public function setStoreId($value)
+    {
+        return $this->setParameter('storeId', $value);
+    }
+
+    public function getCurrencyNumeric(): ?string
+    {
+        return str_pad(parent::getCurrencyNumeric(), 3, '0', STR_PAD_LEFT);
+    }
+
     /**
      * Get the base transaction data.
      *

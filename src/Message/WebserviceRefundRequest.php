@@ -50,20 +50,22 @@ class WebserviceRefundRequest extends WebserviceAbstractRequest
 {
     /** @var string XML template for the refund request */
     protected $xmlTemplate = '
-<fdggwsapi:FDGGWSApiOrderRequest xmlns:v1="http://secure.linkpt.net/fdggwsapi/schemas_us/v1"
-    xmlns:fdggwsapi="http://secure.linkpt.net/fdggwsapi/schemas_us/fdggwsapi">
+<ipgapi:IPGApiOrderRequest xmlns:v1="http://ipg-online.com/ipgapi/schemas/v1" 
+    xmlns:ipgapi="http://ipg-online.com/ipgapi/schemas/ipgapi">
     <v1:Transaction>
         <v1:CreditCardTxType>
+            <v1:StoreId>%store_id%</v1:StoreId>
             <v1:Type>%txn_type%</v1:Type>
         </v1:CreditCardTxType>
         <v1:Payment>
             <v1:ChargeTotal>%amount%</v1:ChargeTotal>
+            <v1:Currency>%currency%</v1:Currency>
         </v1:Payment>
         <v1:TransactionDetails>
             <v1:OrderId>%reference_no%</v1:OrderId>
         </v1:TransactionDetails>
     </v1:Transaction>
-</fdggwsapi:FDGGWSApiOrderRequest>
+</ipgapi:IPGApiOrderRequest>
 ';
 
     /** @var string Transaction type */
@@ -75,7 +77,7 @@ class WebserviceRefundRequest extends WebserviceAbstractRequest
 
         $data['txn_type']           = $this->txn_type;
 
-        $this->validate('amount', 'transactionReference');
+        $this->validate('amount', 'transactionReference', 'currency');
 
         // Fetch the original transaction reference and tdate from the
         // concatenated transactionReference returned by the purchase()
@@ -86,6 +88,8 @@ class WebserviceRefundRequest extends WebserviceAbstractRequest
         $data['tdate']              = $tdate;
 
         $data['amount']             = $this->getAmount();
+        $data['store_id']           = $this->getStoreId() ?? "";
+        $data['currency']           = $this->getCurrencyNumeric();
 
         return $data;
     }

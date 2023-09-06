@@ -35,6 +35,6 @@ class WebservicePurchaseRequestTest extends TestCase
         $this->assertTrue(is_resource($curl));
 
         $endpoint = $request->getEndpoint();
-        $this->assertEquals('https://ws.merchanttest.firstdataglobalgateway.com:443/fdggwsapi/services', $endpoint);
+        $this->assertEquals('https://test.ipg-online.com/ipgapi/services', $endpoint);
     }
 }

@@ -12,6 +12,7 @@ class WebserviceRefundRequestTest extends TestCase
         $request->initialize(
             array(
                 'amount'                => '12.00',
+                'currency'              => 'ARS',
                 'transactionReference'  => '98765::ABCDEF',
             )
         );
@@ -21,5 +22,6 @@ class WebserviceRefundRequestTest extends TestCase
         $this->assertEquals('12.00', $data['amount']);
         $this->assertEquals('98765', $data['reference_no']);
         $this->assertEquals('ABCDEF', $data['tdate']);
+        $this->assertEquals('032', $data['currency']);
     }
 }

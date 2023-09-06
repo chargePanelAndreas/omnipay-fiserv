@@ -181,6 +181,7 @@ class WebserviceGateway extends AbstractGateway
             'sslKeyPassword'    => '',
             'userName'          => '',
             'password'          => '',
+            'storeId'          => '',
             'testMode'          => false,
         );
     }
@@ -354,6 +355,16 @@ class WebserviceGateway extends AbstractGateway
     public function setPassword($value)
     {
         return $this->setParameter('password', $value);
+    }
+
+    public function getStoreId()
+    {
+        return $this->getParameter('storeId');
+    }
+
+    public function setStoreId($value)
+    {
+        return $this->setParameter('storeId', $value);
     }
 
     /**
