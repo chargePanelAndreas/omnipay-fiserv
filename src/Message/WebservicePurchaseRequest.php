@@ -60,37 +60,26 @@ class WebservicePurchaseRequest extends WebserviceAbstractRequest
 {
     /** @var string XML template for the purchase request */
     protected $xmlTemplate = '
-<fdggwsapi:FDGGWSApiOrderRequest xmlns:v1="http://secure.linkpt.net/fdggwsapi/schemas_us/v1"
-    xmlns:fdggwsapi="http://secure.linkpt.net/fdggwsapi/schemas_us/fdggwsapi">
+<ipgapi:IPGApiOrderRequest xmlns:v1="http://ipg-online.com/ipgapi/schemas/v1" 
+    xmlns:ipgapi="http://ipg-online.com/ipgapi/schemas/ipgapi">
     <v1:Transaction>
         <v1:CreditCardTxType>
+            <v1:StoreId>%store_id%</v1:StoreId>
             <v1:Type>%txn_type%</v1:Type>
         </v1:CreditCardTxType>
         <v1:CreditCardData>
-            <v1:CardNumber>%card_number%</v1:CardNumber>
-            <v1:ExpMonth>%card_expiry_month%</v1:ExpMonth>
-            <v1:ExpYear>%card_expiry_year%</v1:ExpYear>
+            <v1:CardCodeValue>%cvd_code%</v1:CardCodeValue>
         </v1:CreditCardData>
         <v1:Payment>
+            <v1:HostedDataID>%hosted_data_id%</v1:HostedDataID>
             <v1:ChargeTotal>%amount%</v1:ChargeTotal>
+            <v1:Currency>%currency%</v1:Currency>
         </v1:Payment>
         <v1:TransactionDetails>
             <v1:OrderId>%reference_no%</v1:OrderId>
-            <v1:Ip>%ip%</v1:Ip>
-            <v1:Recurring>No</v1:Recurring>
         </v1:TransactionDetails>
-        <v1:Billing>
-            <v1:CustomerID>%account_id%</v1:CustomerID>
-            <v1:Name>%card_name%</v1:Name>
-            <v1:Address1>%card_address1%</v1:Address1>
-            <v1:City>%card_city%</v1:City>
-            <v1:State>%card_state%</v1:State>
-            <v1:Zip>%card_postcode%</v1:Zip>
-            <v1:Country>%card_country%</v1:Country>
-            <v1:Email>%card_email%</v1:Email>
-        </v1:Billing>
     </v1:Transaction>
-</fdggwsapi:FDGGWSApiOrderRequest>
+</ipgapi:IPGApiOrderRequest>
 ';
 
     /** @var string Transaction type */
@@ -121,33 +110,14 @@ class WebservicePurchaseRequest extends WebserviceAbstractRequest
     {
         $data = parent::getData();
 
+        $this->validate('amount', 'card', 'transactionId', 'storeId', 'hostedDataId', 'currency');
+
         $data['txn_type']           = $this->txn_type;
-
-        // We have to make the transactionId a required parameter because
-        // it is returned as the transactionReference, and required for
-        // voids, refunds, and captures.  The accountId parameter is also
-        // required by First Data.
-        $this->validate('amount', 'card', 'transactionId', 'accountId');
-
         $data['amount']             = $this->getAmount();
         $data['reference_no']       = $this->getTransactionId();
-        $data['ip']                 = $this->getClientIp();
-
-        // Add account details
-        $data['account_id']         = $this->getAccountId();
-
-        // add credit card details
-        $data['card_number']        = $this->getCard()->getNumber();
-        $data['card_name']          = $this->getCard()->getName();
-        $data['card_expiry_month']  = $this->getCard()->getExpiryDate('m');
-        $data['card_expiry_year']   = $this->getCard()->getExpiryDate('y');
-        $data['card_address1']      = $this->getCard()->getBillingAddress1();
-        $data['card_address2']      = $this->getCard()->getBillingAddress2();
-        $data['card_city']          = $this->getCard()->getBillingCity();
-        $data['card_state']         = $this->getCard()->getBillingState();
-        $data['card_postcode']      = $this->getCard()->getBillingPostcode();
-        $data['card_country']       = $this->getCard()->getBillingCountry();
-        $data['card_email']         = $this->getCard()->getEmail();
+        $data['store_id']           = $this->getStoreId();
+        $data['hosted_data_id']     = $this->getHostedDataId();
+        $data['currency']           = $this->getCurrencyNumeric();
         $data['cvd_code']           = $this->getCard()->getCvv();
 
         return $data;

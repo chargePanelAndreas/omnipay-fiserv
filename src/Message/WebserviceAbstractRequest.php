@@ -221,6 +221,16 @@ abstract class WebserviceAbstractRequest extends AbstractRequest
         return $this->setParameter('storeId', $value);
     }
 
+    public function setHostedDataId($value): self
+    {
+        return $this->setParameter('hostedDataId', $value);
+    }
+
+    public function getHostedDataId(): string
+    {
+        return (string) $this->getParameter('hostedDataId');
+    }
+
     public function getCurrencyNumeric(): ?string
     {
         return str_pad(parent::getCurrencyNumeric(), 3, '0', STR_PAD_LEFT);

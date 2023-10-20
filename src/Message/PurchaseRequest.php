@@ -86,6 +86,16 @@ class PurchaseRequest extends AbstractRequest
         return (string) $this->getParameter('customerId');
     }
 
+    public function setTransactionNotificationURL(string $url): self
+    {
+        return $this->setParameter('transactionNotificationURL', $url);
+    }
+
+    public function getTransactionNotificationURL(): string
+    {
+        return (string) $this->getParameter('transactionNotificationURL');
+    }
+
     public function getData(): array
     {
         $this->validate('amount');
@@ -105,7 +115,7 @@ class PurchaseRequest extends AbstractRequest
             'responseFailURL' => $this->getParameter('returnUrl'),
             'oid' => $this->getParameter('transactionId'),
             'taxRefundIndicator' => $this->getParameter('taxRefundIndicator'),
-            'transactionNotificationURL' => $this->getParameter('transactionNotificationURL'),
+            'transactionNotificationURL' => $this->getTransactionNotificationURL(),
             'customerid' => $this->getCustomerId(),
             'hosteddataid' => $this->getHostedDataId(),
             'full_bypass' => $cardDataExists,
