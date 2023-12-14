@@ -22,8 +22,15 @@ class CompletePurchaseRequest extends PurchaseRequest
 
     private function validateResponseHash(): void
     {
-        $theirHash = (string) ($this->httpRequest->request->get('notification_hash') ?: $this->httpRequest->request->get('response_hash'));
-        $ourHash   = $this->createResponseHash($this->httpRequest->request->all());
+        if (!empty($this->httpRequest->request->get('notification_hash'))) {
+            $order = ['chargetotal', 'currency', 'txndatetime', 'storename', 'approval_code'];
+            $theirHash = (string) $this->httpRequest->request->get('notification_hash');
+        } else {
+            $order = ['approval_code', 'chargetotal', 'currency', 'txndatetime', 'storename'];
+            $theirHash = (string) $this->httpRequest->request->get('response_hash');
+        }
+
+        $ourHash   = $this->createResponseHash($this->httpRequest->request->all(), $order);
 
         if ($theirHash !== $ourHash) {
             throw new InvalidResponseException("Callback hash does not match expected value $ourHash");
@@ -35,15 +42,11 @@ class CompletePurchaseRequest extends PurchaseRequest
         return $this->response = new CompletePurchaseResponse($this, $data);
     }
 
-    public function createResponseHash(array $data): string
+    public function createResponseHash(array $data, array $order): string
     {
         $this->validate('storeId', 'sharedSecret');
 
         $data['storename'] = $this->getStoreId();
-
-        $order = [
-            'approval_code', 'chargetotal', 'currency', 'txndatetime', 'storename',
-        ];
 
         return $this->createHash($data, $order);
     }
