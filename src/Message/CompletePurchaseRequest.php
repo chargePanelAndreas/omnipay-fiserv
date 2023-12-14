@@ -22,7 +22,7 @@ class CompletePurchaseRequest extends PurchaseRequest
 
     private function validateResponseHash(): void
     {
-        $theirHash = (string) $this->httpRequest->request->get('response_hash');
+        $theirHash = (string) ($this->httpRequest->request->get('notification_hash') ?: $this->httpRequest->request->get('response_hash'));
         $ourHash   = $this->createResponseHash($this->httpRequest->request->all());
 
         if ($theirHash !== $ourHash) {
