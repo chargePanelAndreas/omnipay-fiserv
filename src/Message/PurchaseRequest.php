@@ -8,6 +8,7 @@ namespace Omnipay\FiservArg\Message;
 use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Common\Message\ResponseInterface;
+use Omnipay\Common\Message\RedirectResponseInterface;
 
 /**
  * Fiserv Argentina Connect Purchase Request
@@ -107,18 +108,11 @@ class PurchaseRequest extends AbstractRequest
             'txndatetime' => $this->getDateTime(),
             'hash_algorithm' => 'HMACSHA256',
             'storename' => $this->getStoreId(),
-            'mode' => 'payonly',
-            'paymentMethod' => $this->getParameter('paymentMethod'),
+            'checkoutoption' => 'combinedpage',
             'chargetotal' => $this->getAmount(),
             'currency' => $this->getCurrencyNumeric(),
-            'responseSuccessURL' => $this->getParameter('returnUrl'),
-            'responseFailURL' => $this->getParameter('returnUrl'),
-            'oid' => $this->getParameter('transactionId'),
-            'taxRefundIndicator' => $this->getParameter('taxRefundIndicator'),
-            'transactionNotificationURL' => $this->getTransactionNotificationURL(),
-            'customerid' => $this->getCustomerId(),
-            'hosteddataid' => $this->getHostedDataId(),
-            'full_bypass' => $cardDataExists,
+            'responseSuccessURL' => 'https://example.com/success',
+            'responseFailURL' => 'https://example.com/fail',
         ];
 
         if ($cardDataExists) {
@@ -161,7 +155,7 @@ class PurchaseRequest extends AbstractRequest
         }, $order);
 
         $stringToHash = implode('|', array_filter($valuesToHash));
-
+        $sharedSecret = $this->getSharedSecret();
         $hash = hash_hmac('sha256', $stringToHash, $this->getSharedSecret(), true);
 
         return base64_encode($hash);
@@ -172,13 +166,30 @@ class PurchaseRequest extends AbstractRequest
         return str_pad(parent::getCurrencyNumeric(), 3, '0', STR_PAD_LEFT);
     }
 
-    public function sendData($data): ResponseInterface
-    {
-        return $this->response = new PurchaseResponse($this, $data);
-    }
+    public function sendData($data): RedirectResponseInterface
+{
+    $endpoint = $this->getEndpoint();
+
+    // FIXED: Changed to application/x-www-form-urlencoded
+    $httpResponse = $this->httpClient->request(
+        'POST',
+        $endpoint,
+        [
+            'Content-Type' => 'application/x-www-form-urlencoded'
+        ],
+        http_build_query($data) // FIXED: Changed from json_encode to http_build_query
+    );
+    $location = $httpResponse->getHeader('Location')[0] ?? null;
+    return $this->createResponse($location);
+}
 
     public function getEndpoint(): string
     {
         return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
+    }
+
+    protected function createResponse($location)
+    {
+        return $this->response = new PurchaseResponse($this,$location);
     }
 }

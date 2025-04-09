@@ -8,3 +8,4 @@ phpunit.xml
 dirlist.app
 dirlist.cache
 dirlist.vendor
+.DS_Store
