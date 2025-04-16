@@ -8,13 +8,49 @@ namespace Omnipay\FiservArg\Message;
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Common\Message\AbstractRequest;
+use Omnipay\Common\Message\NotificationInterface;
 
 
 /**
  * First Data Connect Complete Purchase Request
  */
-class CompletePurchaseRequest extends AbstractRequest 
+class CompletePurchaseNotification extends AbstractRequest implements NotificationInterface
 {
+    /**
+     * @var string|null
+     */
+    private $message;
+    private ?string $eventType;
+    private bool $success = false;
+
+    function getTransactionStatus()
+    {
+        $status = $this->httpRequest->request->get('status');
+        return match ($status) {
+            'APPROVED' => NotificationInterface::STATUS_COMPLETED,
+            'APROBADO' => NotificationInterface::STATUS_COMPLETED,
+            'DECLINED' => NotificationInterface::STATUS_FAILED,
+            'RECHAZADO' => NotificationInterface::STATUS_FAILED,
+            default => NotificationInterface::STATUS_PENDING
+        };
+    }
+
+    function getMessage()
+    {
+        return $this->message;
+    }
+
+    function getCode()
+    {
+        if($this->success)
+        {
+            return 200;
+        }
+        else
+        {
+            return 400;
+        }
+    }
 
     /**
      * Set Store ID
@@ -99,9 +135,18 @@ class CompletePurchaseRequest extends AbstractRequest
         }
     }
 
-    public function sendData($data): ResponseInterface
+    public function sendData($data): self
     {
-        return $this->response = new CompletePurchaseResponse($this, $data);
+        return $this;
+    }
+
+    public function isSuccessful()
+    {
+        $status = $this->httpRequest->request->get('status');
+        if ($status !== 'APPROVED' && $status !== 'APROBADO') {
+            return false;
+        }
+        return true;
     }
 
     public function createResponseHash(array $data, array $order): string
