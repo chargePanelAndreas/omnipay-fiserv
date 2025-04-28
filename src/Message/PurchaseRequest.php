@@ -111,8 +111,8 @@ class PurchaseRequest extends AbstractRequest
             'checkoutoption' => 'combinedpage',
             'chargetotal' => $this->getAmount(),
             'currency' => $this->getCurrencyNumeric(),
-            'responseSuccessURL' => 'https://example.com/success',
-            'responseFailURL' => 'https://example.com/fail',
+            'responseSuccessURL' => $this->getReturnUrl(),
+            'responseFailURL' => $this->getCancelUrl(),
         ];
 
         if ($cardDataExists) {
