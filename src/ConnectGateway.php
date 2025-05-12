@@ -7,6 +7,7 @@ namespace Omnipay\FiservArg;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\RequestInterface;
+use Omnipay\Common\Message\NotificationInterface;
 
 /**
  * First Data Connect Gateway
@@ -172,5 +173,10 @@ class ConnectGateway extends AbstractGateway
     public function completePurchase(array $parameters = array()): RequestInterface
     {
         return $this->createRequest('\Omnipay\FiservArg\Message\CompletePurchaseRequest', $parameters);
+    }
+
+    public function acceptNotification(array $parameters = array())
+    {
+        return $this->createRequest('\Omnipay\FiservArg\Message\CompletePurchaseNotification', $parameters);
     }
 }
