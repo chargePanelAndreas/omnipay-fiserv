@@ -15,7 +15,7 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class PurchaseRequest extends AbstractRequest
 {
-    protected string $liveEndpoint = 'https://www.ipg-online.com/connect/gateway/processing';
+    protected string $liveEndpoint = 'https://www2.ipg-online.com/connect/gateway/processing';
     protected string $testEndpoint = 'https://test.ipg-online.com/connect/gateway/processing';
 
     protected function getDateTime(): string
