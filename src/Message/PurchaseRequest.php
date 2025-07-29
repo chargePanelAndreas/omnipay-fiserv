@@ -50,6 +50,64 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
+     * Possible values:
+     * Language Value
+     * Chinese (simplified) zh_CN
+     * Chinese (traditional) zh_TW
+     * Czech cs_CZ
+     * Danish da_DK
+     * Dutch nl_NL
+     * English (USA) en_US
+     * English (UK) en_GB
+     * Finnish fi_FI
+     * French fr_FR
+     * German de_DE
+     * Greek el_GR
+     * Hungarian hu_HU
+     * Italian it_IT
+     * Japanese ja_JP
+     * Norwegian (Bokmål) nb_NO
+     * Polish pl_PL
+     * Portuguese (Brazil) pt_BR
+     * Serbian (Serbia) sr_RS
+     * Slovak sk_SK
+     * Slovenian sl_SI
+     * Spanish (Spain) es_ES
+     * Spanish (Mexico) es_MX
+     * Swedish sv_SE
+     *
+     * @param $value
+     * @return self
+     */
+    public function setLanguage(?string $value): self
+    {
+        if (empty($value)) {
+            // Default to English if no language is provided
+            $value = 'en_US';
+        }
+        // Normalize the language code to lowercase, underscore, uppercase like xx_XX
+        $value = strtolower(substr($value, 0, 2)) . '_' . strtoupper(substr($value, 3, 2));
+
+        // Validate the language code
+        $validLanguages = [
+            'zh_CN', 'zh_TW', 'cs_CZ', 'da_DK', 'nl_NL', 'en_US', 'en_GB',
+            'fi_FI', 'fr_FR', 'de_DE', 'el_GR', 'hu_HU', 'it_IT', 'ja_JP',
+            'nb_NO', 'pl_PL', 'pt_BR', 'sr_RS', 'sk_SK', 'sl_SI',
+            'es_ES', 'es_MX', 'sv_SE'
+        ];
+        if (!in_array($value, $validLanguages)) {
+            // Default to English if the provided language is not valid
+            $value = 'en_US';
+        }
+        return $this->setParameter('language', $value);
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->getParameter('language') ?? 'en_US'; // Default to English if not set
+    }
+
+    /**
      * Set Shared Secret
      *
      * Calls to the Connect Gateway API are secured with a store ID and
@@ -113,6 +171,7 @@ class PurchaseRequest extends AbstractRequest
             'currency' => $this->getCurrencyNumeric(),
             'responseSuccessURL' => $this->getReturnUrl(),
             'responseFailURL' => $this->getCancelUrl(),
+            'language' => $this->getLanguage(),
         ];
 
         if ($cardDataExists) {
